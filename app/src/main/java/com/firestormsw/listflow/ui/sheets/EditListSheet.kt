@@ -41,7 +41,7 @@ fun EditListSheet(
         return
     }
 
-    var listNameInput by remember { mutableStateOf(editList?.name ?: "") }
+    var listNameInput by remember(editList) { mutableStateOf(editList?.name ?: "") }
     val focusRequester = remember { FocusRequester() }
 
     ModalBottomSheet(
@@ -65,6 +65,7 @@ fun EditListSheet(
                     onValueChange = { text -> listNameInput = text },
                     label = "List name",
                     singleLine = true,
+                    initialCursorAtEnd = true,
                     keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -81,7 +82,7 @@ fun EditListSheet(
                         onSave(
                             ListModel(
                                 id = editList?.id ?: ULID.randomULID(),
-                                name = listNameInput,
+                                name = listNameInput.trim(),
                                 isCheckedExpanded = false,
                                 items = emptyList()
                             )
@@ -104,7 +105,6 @@ fun EditListSheet(
 
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
-            listNameInput = editList?.name ?: ""
         }
     }
 }

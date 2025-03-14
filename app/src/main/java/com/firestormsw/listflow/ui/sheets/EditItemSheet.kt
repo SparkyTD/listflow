@@ -54,7 +54,7 @@ fun EditItemSheet(
         return
     }
 
-    var itemTextInput by remember { mutableStateOf(editListItem?.text ?: "") }
+    var itemTextInput by remember(editListItem) { mutableStateOf(editListItem?.text ?: "") }
     var itemUnitInput by remember { mutableStateOf(editListItem?.unit ?: "") }
     var itemQuantityInput by remember { mutableStateOf(editListItem?.quantity?.toString() ?: "") }
     val focusRequester = remember { FocusRequester() }
@@ -80,6 +80,7 @@ fun EditItemSheet(
                     onValueChange = { text -> itemTextInput = text },
                     label = "List name",
                     singleLine = true,
+                    initialCursorAtEnd = true,
                     keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,8 +173,8 @@ fun EditItemSheet(
                         onSave(
                             ListItemModel(
                                 id = editListItem?.id ?: ULID.randomULID(),
-                                text = itemTextInput,
-                                unit = itemUnitInput,
+                                text = itemTextInput.trim(),
+                                unit = itemUnitInput.trim(),
                                 quantity = itemQuantityInput.toFloatOrNull(),
                                 isHighlighted = false,
                                 isChecked = false,
@@ -199,7 +200,6 @@ fun EditItemSheet(
 
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
-            itemTextInput = editListItem?.text ?: ""
         }
     }
 }

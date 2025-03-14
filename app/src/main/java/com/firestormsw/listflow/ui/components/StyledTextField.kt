@@ -11,12 +11,18 @@ import androidx.compose.material3.OutlinedTextFieldDefaults.Container
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.firestormsw.listflow.ui.theme.Accent
@@ -37,8 +43,36 @@ fun StyledTextField(
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: @Composable (() -> Unit)? = null,
+    initialCursorAtEnd: Boolean = false // New parameter to control cursor position
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+
+    // Convert the string to TextFieldValue and manage cursor position
+    var textFieldValue by remember(value) {
+        mutableStateOf(
+            TextFieldValue(
+                text = value,
+                selection = if (initialCursorAtEnd && value.isNotEmpty())
+                    TextRange(value.length) // Cursor at end
+                else
+                    TextRange(0) // Default cursor at start
+            )
+        )
+    }
+
+    // Update textFieldValue when the external value changes
+    LaunchedEffect(value) {
+        if (textFieldValue.text != value) {
+            textFieldValue = TextFieldValue(
+                text = value,
+                selection = if (initialCursorAtEnd)
+                    TextRange(value.length)
+                else
+                    textFieldValue.selection
+            )
+        }
+    }
+
     val colors: TextFieldColors = OutlinedTextFieldDefaults.colors().copy(
         focusedContainerColor = Color.Transparent,
         focusedIndicatorColor = Accent,
@@ -48,9 +82,15 @@ fun StyledTextField(
         unfocusedIndicatorColor = TextSecondary,
         unfocusedLabelColor = TextSecondary
     )
+
     BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
+        value = textFieldValue,
+        onValueChange = { newValue ->
+            textFieldValue = newValue
+            if (newValue.text != value) {
+                onValueChange(newValue.text)
+            }
+        },
         singleLine = singleLine,
         interactionSource = interactionSource,
         keyboardOptions = keyboardOptions,
@@ -72,7 +112,7 @@ fun StyledTextField(
         }
     ) { innerTextField ->
         OutlinedTextFieldDefaults.DecorationBox(
-            value = value,
+            value = textFieldValue.text,
             innerTextField = innerTextField,
             enabled = true,
             singleLine = true,
@@ -94,5 +134,4 @@ fun StyledTextField(
             },
         )
     }
-
 }
