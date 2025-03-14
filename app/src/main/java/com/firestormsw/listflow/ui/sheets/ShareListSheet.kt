@@ -156,7 +156,7 @@ fun ShareListSheet(
                     accentColor = PanelActive,
                     modifier = Modifier.width(configuration.screenWidthDp.dp.div(1f / 0.7f)),
                 ) {
-                    Text("Close")
+                    Text("Close", style = Typography.bodyLarge)
                 }
             }
 

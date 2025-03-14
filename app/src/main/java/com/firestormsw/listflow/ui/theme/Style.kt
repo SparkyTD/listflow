@@ -8,6 +8,6 @@ object CornerRadius {
 }
 
 object BorderThickness {
-    val Medium = 3.dp
+    val Medium = 2.dp
     val Thick = 4.dp
 }

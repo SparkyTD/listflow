@@ -36,6 +36,7 @@ import com.firestormsw.listflow.ui.icons.Add
 import com.firestormsw.listflow.ui.icons.Remove
 import com.firestormsw.listflow.ui.theme.Background
 import com.firestormsw.listflow.ui.theme.PanelActive
+import com.firestormsw.listflow.ui.theme.Typography
 import ulid.ULID
 import java.time.Instant
 import java.util.Date
@@ -189,7 +190,8 @@ fun EditItemSheet(
                             "Create item"
                         } else {
                             "Save item"
-                        }
+                        },
+                        style = Typography.bodyLarge
                     )
                 }
             }

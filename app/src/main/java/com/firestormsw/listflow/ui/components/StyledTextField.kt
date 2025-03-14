@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.firestormsw.listflow.ui.theme.Accent
@@ -25,6 +24,7 @@ import com.firestormsw.listflow.ui.theme.BorderThickness
 import com.firestormsw.listflow.ui.theme.CornerRadius
 import com.firestormsw.listflow.ui.theme.TextPrimary
 import com.firestormsw.listflow.ui.theme.TextSecondary
+import com.firestormsw.listflow.ui.theme.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +48,6 @@ fun StyledTextField(
         unfocusedIndicatorColor = TextSecondary,
         unfocusedLabelColor = TextSecondary
     )
-
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -63,7 +62,7 @@ fun StyledTextField(
                     colors.cursorColor
             ).value
         ),
-        textStyle = TextStyle(color = colors.focusedTextColor),
+        textStyle = Typography.bodyLarge.copy(color = colors.focusedTextColor),
         modifier = if (label.isNotBlank()) {
             modifier
                 .semantics(mergeDescendants = true) {}
@@ -80,7 +79,7 @@ fun StyledTextField(
             interactionSource = interactionSource,
             visualTransformation = VisualTransformation.None,
             placeholder = placeholder,
-            label = { Text(label) },
+            label = { Text(label, style = Typography.bodyLarge) },
             colors = colors,
             container = {
                 Container(

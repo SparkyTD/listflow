@@ -26,6 +26,7 @@ import com.firestormsw.listflow.ui.components.SheetDragHandle
 import com.firestormsw.listflow.ui.components.StyledButton
 import com.firestormsw.listflow.ui.components.StyledTextField
 import com.firestormsw.listflow.ui.theme.Background
+import com.firestormsw.listflow.ui.theme.Typography
 import ulid.ULID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +95,8 @@ fun EditListSheet(
                             "Create list"
                         } else {
                             "Save list"
-                        }
+                        },
+                        style = Typography.bodyLarge
                     )
                 }
             }
