@@ -73,7 +73,7 @@ fun TodoListItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(50.dp)
     ) {
         OutlinedCard(
             border = BorderStroke(if (item.isChecked) BorderThickness.Thick else 0.dp, PanelActive),
@@ -109,7 +109,7 @@ fun TodoListItem(
             ) {
                 // Item checkbox
                 AnimatedCheckbox(item.isChecked) {
-                    // onToggleChecked(item)
+                    onToggleChecked(item)
                 }
 
                 // Main content
