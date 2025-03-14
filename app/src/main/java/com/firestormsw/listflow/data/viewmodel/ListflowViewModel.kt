@@ -8,6 +8,7 @@ import com.firestormsw.listflow.data.model.ListItemModel
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.repository.ListItemRepository
 import com.firestormsw.listflow.data.repository.ListRepository
+import com.firestormsw.listflow.data.repository.PeerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,10 +22,11 @@ import ulid.ULID
 import javax.inject.Inject
 
 @HiltViewModel
-class SimpleListViewModel @Inject constructor(
+class ListflowViewModel @Inject constructor(
     private val listRepository: ListRepository,
     private val listItemRepository: ListItemRepository,
-    private val mqttManager: MqttManager,
+    private val peerRepository: PeerRepository,
+    private val shareManager: ListShareManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SimpleListState())
@@ -51,11 +53,23 @@ class SimpleListViewModel @Inject constructor(
                 }
             }
         }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (shareManager.connectIfHasPeers()) {
+                shareManager.setupPeerListeners()
+            }
+        }
     }
 
+    // List CRUD functions
     fun deleteList(list: ListModel) {
         viewModelScope.launch(Dispatchers.IO) {
             listRepository.deleteList(list)
+
+            if (!peerRepository.getListsWithPeers().any()) {
+                shareManager.disconnect()
+            }
+
             _uiState.update {
                 it.copy(
                     snackbarMessage = "The list '${list.name}' was deleted",
@@ -71,6 +85,8 @@ class SimpleListViewModel @Inject constructor(
     fun deleteListItem(item: ListItemModel) {
         viewModelScope.launch(Dispatchers.IO) {
             listItemRepository.deleteListItem(item)
+            shareManager.handleLocalListModified(item.listId)
+
             _uiState.update {
                 it.copy(
                     snackbarMessage = "The item '${item.text}' was deleted",
@@ -92,6 +108,7 @@ class SimpleListViewModel @Inject constructor(
                 _pendingCheckedItems.value += item
             }
             listItemRepository.upsertListItem(item.copy(isChecked = checked))
+            shareManager.handleLocalListModified(item.listId)
 
             if (checked) {
                 pendingMoveJob?.cancel()
@@ -109,18 +126,21 @@ class SimpleListViewModel @Inject constructor(
     fun setItemHighlighted(item: ListItemModel, highlighted: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             listItemRepository.upsertListItem(item.copy(isHighlighted = highlighted))
+            shareManager.handleLocalListModified(item.listId)
         }
     }
 
     fun uncheckAllInList(list: ListModel) {
         viewModelScope.launch(Dispatchers.IO) {
             listRepository.uncheckAllInList(list.id)
+            shareManager.handleLocalListModified(list.id)
         }
     }
 
     fun updateListNoItems(list: ListModel) {
         viewModelScope.launch(Dispatchers.IO) {
             listRepository.upsertList(list)
+
             _uiState.update { it.copy(selectedList = list) }
         }
     }
@@ -128,9 +148,11 @@ class SimpleListViewModel @Inject constructor(
     fun updateListItem(item: ListItemModel) {
         viewModelScope.launch(Dispatchers.IO) {
             listItemRepository.upsertListItem(item)
+            shareManager.handleLocalListModified(item.listId)
         }
     }
 
+    // Sheet functions
     fun openEditListSheet(editList: ListModel?) {
         _uiState.update { it.copy(isEditListSheetOpen = true, editListTarget = editList) }
     }
@@ -190,6 +212,20 @@ class SimpleListViewModel @Inject constructor(
         _uiState.update { it.copy(isScanShareCodeSheetOpen = false) }
     }
 
+    // Share functions
+    fun generateShareCode(list: ListModel, onCodeReady: (String) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            shareManager.generateShareCode(list, onCodeReady)
+        }
+    }
+
+    fun processScannedShareCode(code: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            shareManager.processScannedShareCode(code)
+        }
+    }
+
+    // Others
     fun clearSnackbar() {
         _uiState.update { it.copy(snackbarAction = null, snackbarMessage = null) }
     }

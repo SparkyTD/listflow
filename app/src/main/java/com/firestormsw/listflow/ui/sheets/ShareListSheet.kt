@@ -2,6 +2,7 @@ package com.firestormsw.listflow.ui.sheets
 
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.firestormsw.listflow.data.model.ListModel
+import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.components.ListSelectorChip
 import com.firestormsw.listflow.ui.components.MeasureViewSize
 import com.firestormsw.listflow.ui.components.SheetDragHandle
@@ -47,8 +51,10 @@ import com.firestormsw.listflow.ui.theme.Accent
 import com.firestormsw.listflow.ui.theme.Background
 import com.firestormsw.listflow.ui.theme.PanelActive
 import com.firestormsw.listflow.ui.theme.TextPrimary
+import com.firestormsw.listflow.ui.theme.TextSecondary
 import com.firestormsw.listflow.ui.theme.Typography
 import com.github.alexzhirkevich.customqrgenerator.QrData
+import com.github.alexzhirkevich.customqrgenerator.QrErrorCorrectionLevel
 import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
 import com.github.alexzhirkevich.customqrgenerator.vector.createQrVectorOptions
@@ -62,6 +68,7 @@ import com.google.accompanist.drawablepainter.rememberDrawablePainter
 @Composable
 fun ShareListSheet(
     isOpen: Boolean,
+    viewModel: ListflowViewModel,
     list: ListModel?,
     onDismiss: () -> Unit
 ) {
@@ -88,9 +95,11 @@ fun ShareListSheet(
                 .padding(16.dp)
                 .navigationBarsPadding(),
         ) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
                 Text(
                     text = "Share this list",
                     style = Typography.titleLarge,
@@ -105,12 +114,25 @@ fun ShareListSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(configuration.screenWidthDp.dp.div(1f / 0.7f))
-                    .padding(vertical = 0.dp)
+                    .padding(vertical = 0.dp),
             ) {
-                Image(
-                    painter = rememberDrawablePainter(qrCodeDrawable),
-                    contentDescription = null,
-                )
+                if (qrCodeDrawable != null) {
+                    Image(
+                        painter = rememberDrawablePainter(qrCodeDrawable),
+                        contentDescription = null,
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(top = 80.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(100.dp),
+                            color = Accent,
+                            trackColor = TextSecondary,
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -164,25 +186,27 @@ fun ShareListSheet(
         }
 
         LaunchedEffect(list.id) {
-            // Generate share QR code
-            val data = QrData.Text("Hello World! ${list.id}") // todo
-            val options = createQrVectorOptions {
-                padding = 0f
+            viewModel.generateShareCode(list) { code ->
+                val data = QrData.Text(code)
+                val options = createQrVectorOptions {
+                    errorCorrectionLevel = QrErrorCorrectionLevel.Low
+                    padding = 0f
 
-                colors {
-                    dark = QrVectorColor.Solid(Color(TextPrimary.toArgb().toLong()))
-                    ball = QrVectorColor.Solid(Color(Accent.toArgb().toLong()))
-                    frame = QrVectorColor.Solid(Color(Accent.toArgb().toLong()))
+                    colors {
+                        dark = QrVectorColor.Solid(Color(TextPrimary.toArgb().toLong()))
+                        ball = QrVectorColor.Solid(Color(Accent.toArgb().toLong()))
+                        frame = QrVectorColor.Solid(Color(Accent.toArgb().toLong()))
+                    }
+
+                    shapes {
+                        darkPixel = QrVectorPixelShape.RoundCorners(.5f)
+                        ball = QrVectorBallShape.RoundCorners(.25f)
+                        frame = QrVectorFrameShape.RoundCorners(.25f)
+                    }
                 }
 
-                shapes {
-                    darkPixel = QrVectorPixelShape.RoundCorners(.5f)
-                    ball = QrVectorBallShape.RoundCorners(.25f)
-                    frame = QrVectorFrameShape.RoundCorners(.25f)
-                }
+                qrCodeDrawable = QrCodeDrawable(data, options)
             }
-
-            qrCodeDrawable = QrCodeDrawable(data, options)
         }
     }
 }

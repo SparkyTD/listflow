@@ -1,7 +1,10 @@
 package com.firestormsw.listflow.data.model
 
+import kotlinx.serialization.Serializable
+import java.time.Instant
 import java.util.Date
 
+@Serializable
 data class ListItemModel(
     val id: String,
     val listId: String,
@@ -10,5 +13,5 @@ data class ListItemModel(
     val unit: String?,
     val isChecked: Boolean,
     val isHighlighted: Boolean,
-    val createdAt: Date,
+    @kotlinx.serialization.Transient val createdAt: Date = Date.from(Instant.now()),
 )

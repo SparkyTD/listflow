@@ -3,6 +3,7 @@ package com.firestormsw.listflow.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.firestormsw.listflow.data.dao.PeerDao
+import com.firestormsw.listflow.data.entity.ListEntity
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.model.PeerModel
 import javax.inject.Inject
@@ -18,9 +19,11 @@ class PeerRepository @Inject constructor(
         peerDao.deletePeer(peer.toEntity())
     }
 
-    fun getPeersForList(list: ListModel): LiveData<List<PeerModel>> {
-        return peerDao.getPeersForList(list.id).map {
-            it.map { entity -> entity.toModel() }
-        }
+    fun getPeersForList(listId: String): List<PeerModel> {
+        return peerDao.getPeersForList(listId).map { it.toModel() }
+    }
+
+    fun getListsWithPeers(): List<ListEntity> {
+        return peerDao.getListsWithPeers()
     }
 }

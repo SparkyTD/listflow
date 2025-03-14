@@ -1,7 +1,7 @@
 package com.firestormsw.listflow
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,7 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.firestormsw.listflow.data.viewmodel.SimpleListViewModel
+import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.components.ListSelector
 import com.firestormsw.listflow.ui.components.TodoList
 import com.firestormsw.listflow.ui.icons.Add
@@ -43,10 +43,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: SimpleListViewModel by viewModels()
+    private val viewModel: ListflowViewModel by viewModels()
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             ListflowTheme {
@@ -163,6 +165,7 @@ class MainActivity : ComponentActivity() {
 
                 ShareListSheet(
                     isOpen = state.isShareListSheetOpen,
+                    viewModel = viewModel,
                     list = state.shareListTarget,
                     onDismiss = viewModel::closeShareListSheet,
                 )
@@ -170,10 +173,7 @@ class MainActivity : ComponentActivity() {
                 ScanShareCodeSheet(
                     isOpen = state.isScanShareCodeSheetOpen,
                     onDismiss = viewModel::closeScanShareCodeSheet,
-                    onCodeScanned = { code ->
-                        Log.w("SimpleList", "Code scanned: $code")
-                        // todo
-                    }
+                    onCodeScanned = viewModel::processScannedShareCode
                 )
             }
         }

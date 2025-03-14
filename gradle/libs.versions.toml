@@ -1,7 +1,10 @@
 [versions]
 accompanistPermissionsVersion = "0.37.2"
 accompanistDrawablepainter = "0.37.2"
+accompanistSystemuicontroller = "0.36.0"
 barcodeScanning = "17.3.0"
+bcpkixJdk18on = "1.79"
+bcprovJdk18onVersion = "1.79"
 cameraCamera2 = "1.4.1"
 agp = "8.9.0"
 customQrGenerator = "2.0.0-alpha01"
@@ -11,9 +14,11 @@ coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxSerializationJson = "1.6.2"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.03.00"
+okio = "3.10.2"
 ulidKotlin = "1.3.0"
 roomCompiler = "2.6.1"
 orgEclipsePahoClientMqttv3 = "1.2.5"
@@ -28,6 +33,8 @@ androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.r
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCamera2" }
 barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+bcpkix-jdk18on = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bcpkixJdk18on" }
+bcprov-jdk18on = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bcprovJdk18onVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 custom-qr-generator = { module = "com.github.alexzhirkevich:custom-qr-generator", version.ref = "customQrGenerator" }
@@ -46,6 +53,8 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 ulid-kotlin = { module = "com.aallam.ulid:ulid-kotlin", version.ref = "ulidKotlin" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 org-eclipse-paho-client-mqttv3 = { module = "org.eclipse.paho:org.eclipse.paho.client.mqttv3", version.ref = "orgEclipsePahoClientMqttv3" }

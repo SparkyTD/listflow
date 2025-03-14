@@ -33,15 +33,22 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+    }
+
+    packaging {
+        resources.excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
     }
 }
 
@@ -71,7 +78,11 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.barcode.scanning)
+    implementation(libs.bcprov.jdk18on)
+    implementation(libs.bcpkix.jdk18on)
     implementation(libs.org.eclipse.paho.client.mqttv3)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okio)
 
     ksp(libs.androidx.room.compiler)
     kapt(libs.hilt.android.compiler)

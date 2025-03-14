@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.firestormsw.listflow.data.model.ListModel
-import com.firestormsw.listflow.data.viewmodel.SimpleListViewModel
+import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.icons.Add
 import com.firestormsw.listflow.ui.icons.Delete
 import com.firestormsw.listflow.ui.icons.Edit
@@ -30,7 +30,7 @@ import com.firestormsw.listflow.ui.icons.Share
 
 @Composable
 fun ListSelector(
-    viewModel: SimpleListViewModel,
+    viewModel: ListflowViewModel,
     selectedList: ListModel?,
     onListSelected: (ListModel) -> Unit,
     onPromptEditList: (ListModel) -> Unit,
