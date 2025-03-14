@@ -8,6 +8,7 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +24,13 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -44,6 +50,7 @@ import com.firestormsw.listflow.ui.theme.Accent
 import com.firestormsw.listflow.ui.theme.Background
 import com.firestormsw.listflow.ui.theme.PanelActive
 import com.firestormsw.listflow.ui.theme.TextPrimary
+import com.firestormsw.listflow.ui.theme.TextSecondary
 import com.firestormsw.listflow.ui.theme.Typography
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -53,6 +60,8 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -68,8 +77,30 @@ fun ScanShareCodeSheet(
     val configuration = LocalConfiguration.current
     val localContext = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val cameraProviderFuture = remember {
-        ProcessCameraProvider.getInstance(localContext)
+
+    // Create a mutable state to track if camera should be bound
+    var isCameraActive by remember { mutableStateOf(false) }
+
+    // Remember camera provider and executor
+    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(localContext) }
+    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+
+    // Store reference to the camera provider once we have it
+    var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
+
+    // Get camera provider when sheet is opened
+    LaunchedEffect(true) {
+        cameraProviderFuture.addListener({
+            cameraProvider = cameraProviderFuture.get()
+            isCameraActive = true
+        }, ContextCompat.getMainExecutor(localContext))
+    }
+
+    // Cleanup resources when the component is removed from composition
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraExecutor.shutdown()
+        }
     }
 
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
@@ -79,7 +110,12 @@ fun ScanShareCodeSheet(
         }
     } else {
         ModalBottomSheet(
-            onDismissRequest = onDismiss,
+            onDismissRequest = {
+                // Make sure to unbind camera uses cases when dismissing the sheet
+                isCameraActive = false
+                cameraProvider?.unbindAll()
+                onDismiss()
+            },
             dragHandle = { SheetDragHandle() },
             sheetState = SheetState(
                 skipPartiallyExpanded = true,
@@ -114,36 +150,43 @@ fun ScanShareCodeSheet(
                         .height(configuration.screenWidthDp.dp.div(1f / 0.7f))
                         .padding(vertical = 0.dp)
                 ) {
-                    Surface {
-                        AndroidView(
-                            modifier = Modifier.fillMaxSize(),
-                            factory = { context ->
-                                val previewView = PreviewView(context)
-                                val preview = Preview.Builder().build()
-                                val selector = CameraSelector.Builder()
-                                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                                    .build()
-                                val imageAnalysis = ImageAnalysis.Builder().build()
-                                imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context), BarcodeAnalyzer { code ->
-                                    onCodeScanned(code)
-                                    onDismiss()
-                                })
-
-                                preview.surfaceProvider = previewView.surfaceProvider
-
-                                runCatching {
-                                    cameraProviderFuture.get().bindToLifecycle(
-                                        lifecycleOwner,
-                                        selector,
-                                        preview,
-                                        imageAnalysis
+                    if (cameraPermissionState.status.shouldShowRationale) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "The camera permission was denied",
+                                textAlign = TextAlign.Center,
+                                style = Typography.bodyLarge,
+                                color = TextSecondary,
+                            )
+                        }
+                    } else {
+                        Surface {
+                            // Only show camera when active
+                            if (isCameraActive) {
+                                CameraPreview(
+                                    cameraProvider = cameraProvider,
+                                    lifecycleOwner = lifecycleOwner,
+                                    cameraExecutor = cameraExecutor,
+                                    onCodeScanned = { code ->
+                                        onCodeScanned(code)
+                                        isCameraActive = false
+                                        cameraProvider?.unbindAll()
+                                        onDismiss()
+                                    }
+                                )
+                            } else {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "Initializing camera...",
+                                        style = Typography.bodyLarge,
+                                        color = TextSecondary
                                     )
-                                }.onFailure {
-                                    Log.e("SimpleList", "Camera bind error ${it.localizedMessage}", it)
                                 }
-                                previewView
                             }
-                        )
+                        }
                     }
                 }
 
@@ -168,7 +211,11 @@ fun ScanShareCodeSheet(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     StyledButton(
-                        onClick = onDismiss,
+                        onClick = {
+                            isCameraActive = false
+                            cameraProvider?.unbindAll()
+                            onDismiss()
+                        },
                         accentColor = PanelActive,
                         modifier = Modifier.width(configuration.screenWidthDp.dp.div(1f / 0.7f)),
                     ) {
@@ -180,6 +227,59 @@ fun ScanShareCodeSheet(
             }
         }
     }
+}
+
+@Composable
+fun CameraPreview(
+    cameraProvider: ProcessCameraProvider?,
+    lifecycleOwner: androidx.lifecycle.LifecycleOwner,
+    cameraExecutor: ExecutorService,
+    onCodeScanned: (String) -> Unit
+) {
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = { context ->
+            val previewView = PreviewView(context)
+
+            cameraProvider?.let { provider ->
+                // Unbind any previous use cases first
+                provider.unbindAll()
+
+                // Create use cases
+                val preview = Preview.Builder().build()
+                val selector = CameraSelector.Builder()
+                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                    .build()
+
+                val imageAnalysis = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+
+                imageAnalysis.setAnalyzer(
+                    cameraExecutor,
+                    BarcodeAnalyzer { code ->
+                        onCodeScanned(code)
+                    }
+                )
+
+                preview.surfaceProvider = previewView.surfaceProvider
+
+                try {
+                    // Bind use cases to camera
+                    provider.bindToLifecycle(
+                        lifecycleOwner,
+                        selector,
+                        preview,
+                        imageAnalysis
+                    )
+                } catch (e: Exception) {
+                    Log.e("ScanShareCodeSheet", "Camera bind error: ${e.localizedMessage}", e)
+                }
+            }
+
+            previewView
+        }
+    )
 }
 
 class BarcodeAnalyzer(private val scanCallback: (String) -> Unit) : ImageAnalysis.Analyzer {

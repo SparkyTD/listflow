@@ -165,7 +165,7 @@ fun ShareListSheet(
 
         LaunchedEffect(list.id) {
             // Generate share QR code
-            val data = QrData.Text("Hello World! ${list.id}")
+            val data = QrData.Text("Hello World! ${list.id}") // todo
             val options = createQrVectorOptions {
                 padding = 0f
 
