@@ -37,6 +37,9 @@ Feel free to:
 - Fork the project and make your own version
 - Use the code in your own projects
 
+## List sharing and synchronizing
+This feature is implemented by using MQTT to transmit list updates between two devices. All communications besides the initial handshake are fully end-to-end encrypted using ECDH Key Derivation and AES encryption. Currently the app uses the `mqtt.eclipseprojects.io` public MQTT broker (hard-coded in [ListShareManager.kt](/app/src/main/java/com/firestormsw/listflow/data/viewmodel/ListShareManager.kt#L44)), but you can always self-host your own MQTT broker, fork this repo and change the broker URL. A more streamlined way of managing the broker URL might be added in the future.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. In simple terms: do whatever you want with it.
