@@ -232,6 +232,7 @@ class ListShareManager @Inject constructor(
             val secretKey = SecretKeySpec(peer.sharedAesKey!!.decodeHex().toByteArray(), "AES")
             connectionManager
                 .createEncryptedTopic<ListUpdateMessage>(mqttGetTopicName(MqttMessageType.Update, peer.id), secretKey)
+                .setIsRetained(true)
                 .publish(updateMessage)
         }
     }
@@ -248,6 +249,7 @@ class ListShareManager @Inject constructor(
             val secretKey = SecretKeySpec(peer.sharedAesKey!!.decodeHex().toByteArray(), "AES")
             connectionManager
                 .createEncryptedTopic<ListUpdateMessage>(mqttGetTopicName(MqttMessageType.Update, peer.id), secretKey)
+                .setIsRetained(true)
                 .publish(updateMessage)
 
             disconnectIfNoPeers()

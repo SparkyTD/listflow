@@ -15,8 +15,18 @@ class MqttTopic<TMessage>(
     private val encryptionKey: SecretKey?,
     private val serializer: KSerializer<TMessage>,
 ) {
-    var isRetained: Boolean = false
-    var qos: Int = 1
+    private var isRetained: Boolean = false
+    private var qos: Int = 1
+
+    fun setIsRetained(isRetained: Boolean): MqttTopic<TMessage> {
+        this.isRetained = isRetained
+        return this
+    }
+
+    fun setQos(qos: Int): MqttTopic<TMessage> {
+        this.qos = qos
+        return this
+    }
 
     fun publish(message: TMessage) {
         val jsonString = Json.encodeToString(serializer, message)

@@ -15,7 +15,7 @@ import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-val TAG = "Listflow"
+const val TAG = "Listflow"
 
 @HiltAndroidApp
 class ListflowApplication : Application(), Configuration.Provider {
