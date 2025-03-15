@@ -43,7 +43,7 @@ fun StyledTextField(
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     placeholder: @Composable (() -> Unit)? = null,
-    initialCursorAtEnd: Boolean = false // New parameter to control cursor position
+    initialCursorAtEnd: Boolean = false
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -52,10 +52,10 @@ fun StyledTextField(
         mutableStateOf(
             TextFieldValue(
                 text = value,
-                selection = if (initialCursorAtEnd && value.isNotEmpty())
-                    TextRange(value.length) // Cursor at end
+                selection = if (value.isNotEmpty())
+                    TextRange(value.length)
                 else
-                    TextRange(0) // Default cursor at start
+                    TextRange(0)
             )
         )
     }
