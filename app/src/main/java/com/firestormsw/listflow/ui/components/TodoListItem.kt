@@ -50,6 +50,7 @@ import com.firestormsw.listflow.ui.icons.Edit
 import com.firestormsw.listflow.ui.theme.BorderThickness
 import com.firestormsw.listflow.ui.theme.CornerRadius
 import com.firestormsw.listflow.ui.theme.PanelActive
+import com.firestormsw.listflow.ui.theme.PanelInactive
 import com.firestormsw.listflow.ui.theme.TextPrimary
 import com.firestormsw.listflow.ui.theme.TextSecondary
 import com.firestormsw.listflow.ui.theme.Typography
@@ -175,6 +176,7 @@ fun TodoListItem(
             expanded = editDropdownExpanded,
             onDismissRequest = { editDropdownExpanded = false },
             offset = menuOffset,
+            containerColor = PanelInactive,
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.edit_item), style = Typography.bodyLarge) },

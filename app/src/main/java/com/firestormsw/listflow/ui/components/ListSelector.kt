@@ -30,6 +30,7 @@ import com.firestormsw.listflow.ui.icons.Delete
 import com.firestormsw.listflow.ui.icons.Edit
 import com.firestormsw.listflow.ui.icons.QrCode
 import com.firestormsw.listflow.ui.icons.Share
+import com.firestormsw.listflow.ui.theme.PanelInactive
 import com.firestormsw.listflow.ui.theme.TextPrimary
 import com.firestormsw.listflow.ui.theme.Typography
 
@@ -111,6 +112,7 @@ fun ListSelector(
         expanded = addDropdownExpanded,
         onDismissRequest = { addDropdownExpanded = false },
         offset = menuOffset,
+        containerColor = PanelInactive,
     ) {
         DropdownMenuItem(
             text = { Text(stringResource(R.string.create_new_list), style = Typography.bodyLarge) },
@@ -135,6 +137,7 @@ fun ListSelector(
         expanded = editDropdownExpanded,
         onDismissRequest = { editDropdownExpanded = false },
         offset = menuOffset,
+        containerColor = PanelInactive,
     ) {
         val isListShared by viewModel.getIsListShared(targetList!!.id).observeAsState()
 
