@@ -6,3 +6,10 @@ plugins {
     alias(libs.plugins.google.devtools.ksp) apply false
     id("com.google.dagger.hilt.android") version "2.51.1" apply false
 }
+
+buildscript {
+    dependencies {
+        classpath(libs.kotlin.gradle.plugin)
+        classpath(libs.hilt.android.gradle.plugin)
+    }
+}

@@ -1,10 +1,8 @@
 package com.firestormsw.listflow.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.firestormsw.listflow.data.dao.PeerDao
 import com.firestormsw.listflow.data.entity.ListEntity
-import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.model.PeerModel
 import javax.inject.Inject
 
@@ -25,5 +23,9 @@ class PeerRepository @Inject constructor(
 
     fun getListsWithPeers(): List<ListEntity> {
         return peerDao.getListsWithPeers()
+    }
+
+    fun getIsListShared(listId: String): LiveData<Boolean> {
+        return peerDao.getIsListShared(listId)
     }
 }

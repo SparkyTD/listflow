@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.firestormsw.listflow.ui.theme.Accent
@@ -27,6 +28,9 @@ fun ListSelectorChip(
     onClick: (() -> Unit)? = null,
     onLongClick: (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
+    leadingIconColor: Color? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    trailingIconColor: Color? = null,
 ) {
     val chipInteractionSource = remember { MutableInteractionSource() }
     val haptic = LocalHapticFeedback.current
@@ -37,7 +41,8 @@ fun ListSelectorChip(
             labelColor = TextPrimary,
             selectedContainerColor = Accent,
             selectedLabelColor = TextPrimary,
-            leadingIconColor = Accent
+            leadingIconColor = leadingIconColor ?: Accent,
+            trailingIconColor = trailingIconColor ?: Accent,
         )
 
     Box {
@@ -45,6 +50,7 @@ fun ListSelectorChip(
             selected = selected,
             label = { Text(text, style = Typography.bodyLarge) },
             leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
             onClick = {},
             colors = chipColors,
             border = null,

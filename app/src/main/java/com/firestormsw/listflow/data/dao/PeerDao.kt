@@ -21,4 +21,7 @@ interface PeerDao {
 
     @Query("SELECT DISTINCT lists.* FROM lists INNER JOIN peers ON lists.id = peers.listId")
     fun getListsWithPeers(): List<ListEntity>
+
+    @Query("SELECT count(*) != 0 FROM peers WHERE listId = :listId")
+    fun getIsListShared(listId: String): LiveData<Boolean>
 }

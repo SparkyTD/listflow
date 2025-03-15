@@ -2,6 +2,7 @@ package com.firestormsw.listflow.data.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firestormsw.listflow.data.model.ListItemModel
@@ -64,6 +65,7 @@ class ListflowViewModel @Inject constructor(
     // List CRUD functions
     fun deleteList(list: ListModel) {
         viewModelScope.launch(Dispatchers.IO) {
+            shareManager.handleLocalListDeleted(list.id)
             listRepository.deleteList(list)
 
             if (!peerRepository.getListsWithPeers().any()) {
@@ -215,14 +217,22 @@ class ListflowViewModel @Inject constructor(
     // Share functions
     fun generateShareCode(list: ListModel, onCodeReady: (String) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            shareManager.generateShareCode(list, onCodeReady)
+            shareManager.generateShareCode(list, onCodeReady) {
+                _uiState.update { it.copy(isShareListSheetOpen = false) }
+            }
         }
     }
 
     fun processScannedShareCode(code: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            shareManager.processScannedShareCode(code)
+            shareManager.processScannedShareCode(code) { list ->
+                setSelectedList(list)
+            }
         }
+    }
+
+    fun getIsListShared(listId: String): LiveData<Boolean> {
+        return peerRepository.getIsListShared(listId)
     }
 
     // Others

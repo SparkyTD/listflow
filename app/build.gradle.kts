@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.ulid.kotlin)
     implementation(libs.hilt.android)
     implementation(libs.androidx.runtime.livedata)
@@ -83,9 +84,13 @@ dependencies {
     implementation(libs.org.eclipse.paho.client.mqttv3)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okio)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.hilt.work)
 
     ksp(libs.androidx.room.compiler)
     kapt(libs.hilt.android.compiler)
+    kapt(libs.androidx.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

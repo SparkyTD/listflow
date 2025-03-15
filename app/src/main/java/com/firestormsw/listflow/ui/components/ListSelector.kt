@@ -2,6 +2,7 @@ package com.firestormsw.listflow.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
@@ -27,6 +28,7 @@ import com.firestormsw.listflow.ui.icons.Delete
 import com.firestormsw.listflow.ui.icons.Edit
 import com.firestormsw.listflow.ui.icons.QrCode
 import com.firestormsw.listflow.ui.icons.Share
+import com.firestormsw.listflow.ui.theme.TextPrimary
 
 @Composable
 fun ListSelector(
@@ -54,9 +56,14 @@ fun ListSelector(
     ) {
         items(lists) { listModel ->
             var horizontalPosition by remember { mutableStateOf(0.dp) }
+            val isListShared by viewModel.getIsListShared(listModel.id).observeAsState()
             ListSelectorChip(
                 selected = listModel.id == selectedList?.id,
                 text = listModel.name,
+                trailingIcon = if (isListShared == true) {
+                    { Icon(Share, contentDescription = null, modifier = Modifier.width(16.dp)) }
+                } else null,
+                trailingIconColor = TextPrimary,
                 onClick = { onListSelected(listModel) },
                 onLongClick = {
                     editDropdownExpanded = !editDropdownExpanded
@@ -126,6 +133,8 @@ fun ListSelector(
         onDismissRequest = { editDropdownExpanded = false },
         offset = menuOffset,
     ) {
+        val isListShared by viewModel.getIsListShared(targetList!!.id).observeAsState()
+
         DropdownMenuItem(
             text = { Text("Edit list") },
             leadingIcon = { Icon(Edit, contentDescription = null) },
@@ -138,6 +147,7 @@ fun ListSelector(
         )
         DropdownMenuItem(
             text = { Text("Share list") },
+            enabled = isListShared != true,
             leadingIcon = { Icon(Share, contentDescription = null) },
             onClick = {
                 editDropdownExpanded = false

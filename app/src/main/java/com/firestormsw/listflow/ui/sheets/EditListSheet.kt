@@ -83,7 +83,7 @@ fun EditListSheet(
                             ListModel(
                                 id = editList?.id ?: ULID.randomULID(),
                                 name = listNameInput.trim(),
-                                isCheckedExpanded = false,
+                                isCheckedExpanded = true,
                                 items = emptyList()
                             )
                         )
