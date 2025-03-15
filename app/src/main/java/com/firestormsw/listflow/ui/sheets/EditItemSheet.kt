@@ -24,9 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListItemModel
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.ui.components.SheetDragHandle
@@ -78,7 +80,7 @@ fun EditItemSheet(
                 StyledTextField(
                     value = itemTextInput,
                     onValueChange = { text -> itemTextInput = text },
-                    label = "List name",
+                    label = stringResource(R.string.item_name),
                     singleLine = true,
                     initialCursorAtEnd = true,
                     keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
@@ -110,7 +112,7 @@ fun EditItemSheet(
                     onValueChange = {
                         itemQuantityInput = it
                     },
-                    label = "Quantity",
+                    label = stringResource(R.string.quantity),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     modifier = Modifier
@@ -120,7 +122,7 @@ fun EditItemSheet(
                 StyledTextField(
                     value = itemUnitInput,
                     onValueChange = { itemUnitInput = it },
-                    label = "Unit",
+                    label = stringResource(R.string.unit),
                     singleLine = true,
                     modifier = Modifier
                         .weight(0.3333f)
@@ -188,9 +190,9 @@ fun EditItemSheet(
                 ) {
                     Text(
                         if (editListItem == null) {
-                            "Create item"
+                            stringResource(R.string.create_item)
                         } else {
-                            "Save item"
+                            stringResource(R.string.save_item)
                         },
                         style = Typography.bodyLarge
                     )

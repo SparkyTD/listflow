@@ -37,9 +37,11 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListItemModel
 import com.firestormsw.listflow.ui.icons.BookmarkAdd
 import com.firestormsw.listflow.ui.icons.BookmarkRemove
@@ -175,7 +177,7 @@ fun TodoListItem(
             offset = menuOffset,
         ) {
             DropdownMenuItem(
-                text = { Text("Edit item") },
+                text = { Text(stringResource(R.string.edit_item), style = Typography.bodyLarge) },
                 leadingIcon = { Icon(Edit, contentDescription = null) },
                 onClick = {
                     editDropdownExpanded = false
@@ -184,7 +186,7 @@ fun TodoListItem(
             )
             if (!item.isHighlighted) {
                 DropdownMenuItem(
-                    text = { Text("Highlight") },
+                    text = { Text(stringResource(R.string.highlight), style = Typography.bodyLarge) },
                     leadingIcon = { Icon(BookmarkAdd, contentDescription = null) },
                     onClick = {
                         editDropdownExpanded = false
@@ -193,7 +195,7 @@ fun TodoListItem(
                 )
             } else {
                 DropdownMenuItem(
-                    text = { Text("Unhighlight") },
+                    text = { Text(stringResource(R.string.unhighlight), style = Typography.bodyLarge) },
                     leadingIcon = { Icon(BookmarkRemove, contentDescription = null) },
                     onClick = {
                         editDropdownExpanded = false
@@ -202,7 +204,7 @@ fun TodoListItem(
                 )
             }
             DropdownMenuItem(
-                text = { Text("Delete item") },
+                text = { Text(stringResource(R.string.delete_item), style = Typography.bodyLarge) },
                 leadingIcon = { Icon(Delete, contentDescription = null) },
                 onClick = {
                     editDropdownExpanded = false

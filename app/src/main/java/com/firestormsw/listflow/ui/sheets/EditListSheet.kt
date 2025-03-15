@@ -19,8 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.ui.components.SheetDragHandle
 import com.firestormsw.listflow.ui.components.StyledButton
@@ -63,7 +65,7 @@ fun EditListSheet(
                 StyledTextField(
                     value = listNameInput,
                     onValueChange = { text -> listNameInput = text },
-                    label = "List name",
+                    label = stringResource(R.string.list_name),
                     singleLine = true,
                     initialCursorAtEnd = true,
                     keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
@@ -93,9 +95,9 @@ fun EditListSheet(
                 ) {
                     Text(
                         if (editList == null) {
-                            "Create list"
+                            stringResource(R.string.create_list)
                         } else {
-                            "Save list"
+                            stringResource(R.string.save_list)
                         },
                         style = Typography.bodyLarge
                     )

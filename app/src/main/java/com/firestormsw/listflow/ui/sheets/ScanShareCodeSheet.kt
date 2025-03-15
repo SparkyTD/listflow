@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.TAG
 import com.firestormsw.listflow.ui.components.SheetDragHandle
 import com.firestormsw.listflow.ui.components.StyledButton
@@ -136,7 +138,7 @@ fun ScanShareCodeSheet(
                         .padding(top = 16.dp)
                 ) {
                     Text(
-                        text = "Scan the QR code of a shared list",
+                        text = stringResource(R.string.scan_qr_desc),
                         style = Typography.titleLarge,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -154,7 +156,7 @@ fun ScanShareCodeSheet(
                     if (cameraPermissionState.status.shouldShowRationale) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(
-                                text = "The camera permission was denied",
+                                text = stringResource(R.string.qr_scan_camera_permission_error),
                                 textAlign = TextAlign.Center,
                                 style = Typography.bodyLarge,
                                 color = TextSecondary,
@@ -181,7 +183,7 @@ fun ScanShareCodeSheet(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = "Initializing camera...",
+                                        text = stringResource(R.string.initializing_camera),
                                         style = Typography.bodyLarge,
                                         color = TextSecondary
                                     )
@@ -195,11 +197,11 @@ fun ScanShareCodeSheet(
 
                 Text(
                     text = buildAnnotatedString {
-                        append("Long-press the list to share on the second device, and select the ")
+                        append(stringResource(R.string.scan_qr_instruction_0))
                         withStyle(style = SpanStyle(color = Accent)) {
-                            append("Share list")
+                            append(stringResource(R.string.share_list))
                         }
-                        append(" option")
+                        append(stringResource(R.string.scan_qr_instruction_1))
                     },
                     textAlign = TextAlign.Center,
                     color = TextPrimary,
@@ -220,7 +222,7 @@ fun ScanShareCodeSheet(
                         accentColor = PanelActive,
                         modifier = Modifier.width(configuration.screenWidthDp.dp.div(1f / 0.7f)),
                     ) {
-                        Text("Close")
+                        Text(stringResource(R.string.close))
                     }
                 }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Listflow</string>
+    <string name="list_completed">Teljesített (%1$s)</string>
+    <string name="uncheck_all_items">Összes kijelölés törlése</string>
+    <string name="list_name">Lista neve</string>
+    <string name="quantity">Menny.</string>
+    <string name="unit">Egység</string>
+    <string name="add_list">Új lista</string>
+    <string name="create_new_list">Új lista létrehozása</string>
+    <string name="scan_share_code">Megosztási kód beolvasása</string>
+    <string name="edit_list">Lista szerkesztése</string>
+    <string name="share_list">Lista megosztása</string>
+    <string name="delete_list">Lista törlése</string>
+    <string name="empty_list_notice">Kezdéshez adj hozzá egy új listát</string>
+    <string name="save_item">Tétel mentése</string>
+    <string name="item_name">Tétel neve</string>
+    <string name="create_list">Lista létrehozása</string>
+    <string name="save_list">Lista mentése</string>
+    <string name="initializing_camera">Kamera előkészítése...</string>
+    <string name="close">Bezárás</string>
+    <string name="highlight">Kiemelés</string>
+    <string name="undo">Mégsem</string>
+    <string name="snack_item_deleted">\'%1$s\' törölve</string>
+    <string name="default_list_name">Alapértelmezett</string>
+    <string name="create_item">Új tétel</string>
+    <string name="share_qr_instruction_2">" opciót"</string>
+    <string name="edit_item">Tétel szerkesztése</string>
+    <string name="delete_item">Tétel törlése</string>
+    <string name="unhighlight">Kiemelés törlése</string>
+    <string name="scan_qr_instruction_1">" opciót"</string>
+    <string name="share_this_list">Oszd meg ezt a listát</string>
+    <string name="snack_list_deleted">\'%1$s\' törölve</string>
+    <string name="scan_qr_desc">Olvasd be egy megosztott lista QR-kódját</string>
+    <string name="qr_scan_camera_permission_error">A kamera engedély megtagadva</string>
+    <string name="scan_qr_instruction_0">"Nyomd le hosszan a megosztandó listát a másik eszközön, és válaszd a "</string>
+    <string name="share_qr_instruction_0">"Nyomd le hosszan az "</string>
+    <string name="share_qr_instruction_1">" gombot a másik eszközön, és válaszd a "</string>
+</resources>

@@ -1,16 +1,19 @@
 package com.firestormsw.listflow.data.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListItemModel
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.repository.ListItemRepository
 import com.firestormsw.listflow.data.repository.ListRepository
 import com.firestormsw.listflow.data.repository.PeerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -28,6 +31,7 @@ class ListflowViewModel @Inject constructor(
     private val listItemRepository: ListItemRepository,
     private val peerRepository: PeerRepository,
     private val shareManager: ListShareManager,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SimpleListState())
@@ -74,7 +78,7 @@ class ListflowViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    snackbarMessage = "The list '${list.name}' was deleted",
+                    snackbarMessage = context.getString(R.string.snack_list_deleted, list.name),
                     snackbarAction = {
                         updateListNoItems(list)
                         list.items.forEach { item -> updateListItem(item) }
@@ -91,7 +95,7 @@ class ListflowViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    snackbarMessage = "The item '${item.text}' was deleted",
+                    snackbarMessage = context.getString(R.string.snack_item_deleted, item.text),
                     snackbarAction = {
                         updateListItem(item)
                     }
@@ -168,7 +172,7 @@ class ListflowViewModel @Inject constructor(
             if (targetList == null) {
                 val newList = ListModel(
                     id = ULID.randomULID(),
-                    name = "Default",
+                    name = context.getString(R.string.default_list_name),
                     isCheckedExpanded = true,
                     items = emptyList()
                 )

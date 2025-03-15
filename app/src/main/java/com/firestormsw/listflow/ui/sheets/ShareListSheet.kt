@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.components.ListSelectorChip
@@ -101,7 +103,7 @@ fun ShareListSheet(
                     .padding(top = 16.dp)
             ) {
                 Text(
-                    text = "Share this list",
+                    text = stringResource(R.string.share_this_list),
                     style = Typography.titleLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
@@ -123,7 +125,9 @@ fun ShareListSheet(
                     )
                 } else {
                     Box(
-                        modifier = Modifier.fillMaxWidth().padding(top = 80.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 80.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(
@@ -140,20 +144,20 @@ fun ShareListSheet(
             val addButton: @Composable () -> Unit = {
                 ListSelectorChip(
                     selected = false,
-                    text = "Add",
+                    text = stringResource(R.string.add_list),
                     leadingIcon = { Icon(Add, contentDescription = null) },
                 )
             }
             MeasureViewSize(viewToMeasure = addButton) { measureSize ->
                 Text(
                     text = buildAnnotatedString {
-                        append("Long-press the ")
+                        append(stringResource(R.string.share_qr_instruction_0))
                         appendInlineContent("add-btn")
-                        append(" button on the second device, and select the ")
+                        append(stringResource(R.string.share_qr_instruction_1))
                         withStyle(style = SpanStyle(color = Accent)) {
-                            append("Scan share code")
+                            append(stringResource(R.string.scan_share_code))
                         }
-                        append(" option")
+                        append(stringResource(R.string.share_qr_instruction_2))
                     },
                     textAlign = TextAlign.Center,
                     color = TextPrimary,
@@ -178,7 +182,7 @@ fun ShareListSheet(
                     accentColor = PanelActive,
                     modifier = Modifier.width(configuration.screenWidthDp.dp.div(1f / 0.7f)),
                 ) {
-                    Text("Close", style = Typography.bodyLarge)
+                    Text(stringResource(R.string.close), style = Typography.bodyLarge)
                 }
             }
 

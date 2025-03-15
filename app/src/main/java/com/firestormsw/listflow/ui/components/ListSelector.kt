@@ -19,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.icons.Add
@@ -29,6 +31,7 @@ import com.firestormsw.listflow.ui.icons.Edit
 import com.firestormsw.listflow.ui.icons.QrCode
 import com.firestormsw.listflow.ui.icons.Share
 import com.firestormsw.listflow.ui.theme.TextPrimary
+import com.firestormsw.listflow.ui.theme.Typography
 
 @Composable
 fun ListSelector(
@@ -82,7 +85,7 @@ fun ListSelector(
             var horizontalPosition by remember { mutableStateOf(0.dp) }
             ListSelectorChip(
                 selected = false,
-                text = "Add",
+                text = stringResource(R.string.add_list),
                 leadingIcon = { Icon(Add, contentDescription = null) },
                 onLongClick = {
                     addDropdownExpanded = !addDropdownExpanded
@@ -103,14 +106,14 @@ fun ListSelector(
         }
     }
 
-    // "Add" chip dropdown
+    // Add chip dropdown
     DropdownMenu(
         expanded = addDropdownExpanded,
         onDismissRequest = { addDropdownExpanded = false },
         offset = menuOffset,
     ) {
         DropdownMenuItem(
-            text = { Text("Create new list") },
+            text = { Text(stringResource(R.string.create_new_list), style = Typography.bodyLarge) },
             leadingIcon = { Icon(Add, contentDescription = null) },
             onClick = {
                 addDropdownExpanded = false
@@ -118,7 +121,7 @@ fun ListSelector(
             }
         )
         DropdownMenuItem(
-            text = { Text("Scan share code") },
+            text = { Text(stringResource(R.string.scan_share_code), style = Typography.bodyLarge) },
             leadingIcon = { Icon(QrCode, contentDescription = null) },
             onClick = {
                 addDropdownExpanded = false
@@ -136,7 +139,7 @@ fun ListSelector(
         val isListShared by viewModel.getIsListShared(targetList!!.id).observeAsState()
 
         DropdownMenuItem(
-            text = { Text("Edit list") },
+            text = { Text(stringResource(R.string.edit_list), style = Typography.bodyLarge) },
             leadingIcon = { Icon(Edit, contentDescription = null) },
             onClick = {
                 editDropdownExpanded = false
@@ -146,7 +149,7 @@ fun ListSelector(
             }
         )
         DropdownMenuItem(
-            text = { Text("Share list") },
+            text = { Text(stringResource(R.string.share_list), style = Typography.bodyLarge) },
             enabled = isListShared != true,
             leadingIcon = { Icon(Share, contentDescription = null) },
             onClick = {
@@ -157,7 +160,7 @@ fun ListSelector(
             }
         )
         DropdownMenuItem(
-            text = { Text("Delete list") },
+            text = { Text(stringResource(R.string.delete_list), style = Typography.bodyLarge) },
             leadingIcon = { Icon(Delete, contentDescription = null) },
             onClick = {
                 editDropdownExpanded = false

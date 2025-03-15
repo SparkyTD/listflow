@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     if (state.snackbarMessage != null) {
                         val result = snackbarHostState.showSnackbar(
                             message = state.snackbarMessage!!,
-                            actionLabel = "Undo",
+                            actionLabel = getString(R.string.undo),
                             duration = SnackbarDuration.Short
                         )
 

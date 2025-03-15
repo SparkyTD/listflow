@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.firestormsw.listflow.R
 import com.firestormsw.listflow.data.model.ListItemModel
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.ui.icons.KeyboardArrowDown
@@ -52,7 +54,7 @@ fun TodoList(
     if (list == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
-                text = "Start by adding a new list",
+                text = stringResource(R.string.empty_list_notice),
                 textAlign = TextAlign.Center,
                 style = Typography.bodyLarge,
                 color = TextSecondary,
@@ -120,7 +122,7 @@ fun TodoList(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Completed (${itemList.second.size})",
+                        text = stringResource(R.string.list_completed, itemList.second.size),
                         style = Typography.labelMedium,
                         color = TextSecondary,
                     )
@@ -168,7 +170,7 @@ fun TodoList(
                                     onPromptUncheckAll(list)
                                 }
                             )) {
-                                append("Uncheck all items")
+                                append(stringResource(R.string.uncheck_all_items))
                             }
                         },
                         style = Typography.bodyLarge.copy(
