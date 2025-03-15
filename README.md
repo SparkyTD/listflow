@@ -18,6 +18,13 @@ Listflow does **not** include:
 - Full-screen popups begging you to pay
 - Any other useless bloat
 
+## Screenshots
+<p float="left">
+<img src="./screenshots/screenshot1.png" width="260" alt="Main app screen">
+<img src="./screenshots/screenshot2.png" width="260" alt="Edit item menu">
+<img src="./screenshots/screenshot3.png" width="260" alt="Sharing functionality">
+</p>
+
 ## Installation
 The app is currently not being distributed on the Play Store, so the easiest way to get started is to grab the latest APK from the [Releases](../../releases) page and install it on your Android device.
 
