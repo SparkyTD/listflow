@@ -12,10 +12,12 @@ import com.firestormsw.listflow.data.repository.ListItemRepository
 import com.firestormsw.listflow.data.repository.ListRepository
 import com.firestormsw.listflow.data.repository.PeerRepository
 import com.firestormsw.listflow.utils.CryptoUtils
+import com.google.android.gms.tasks.CancellationToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -43,20 +45,22 @@ class ListShareManager @Inject constructor(
         //brokerUrl = "tcp://192.168.1.108:1883",
         brokerUrl = "tcp://mqtt.eclipseprojects.io:1883",
         clientId = "listflow_" + ULID.randomULID(),
+        context = context,
     )
+
+    private val updateHandlerJobs = mutableMapOf<String, Job>()
 
     init {
         val contentResolver = context.contentResolver
         connectionManager.setClientId(Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
     }
 
-    suspend fun connectIfHasPeers(force: Boolean = false): Boolean {
+    suspend fun connectIfHasPeers(force: Boolean = false, cancellationToken: CancellationToken? = null): Boolean {
         if (!force && !peerRepository.getListsWithPeers().any()) {
             return false
         }
 
-        connectionManager.connect()
-        return true
+        return connectionManager.connect(cancellationToken)
     }
 
     private fun disconnectIfNoPeers() {
@@ -80,15 +84,23 @@ class ListShareManager @Inject constructor(
         connectionManager.disconnect()
     }
 
-    suspend fun generateShareCode(list: ListModel, onCodeReady: (String) -> Unit, onCodeScanned: () -> Unit) {
+    suspend fun generateShareCode(
+        list: ListModel,
+        onCodeReady: (String) -> Unit,
+        cancellationToken: CancellationToken? = null,
+        onCodeScanned: () -> Unit,
+    ) {
         // PROTO(0) - Generate a random session ID, encode it into a QR code on DeviceA
         val sessionId = ULID.randomULID()
         val keyPair = CryptoUtils.generateECDHKeyPair()
         val qrData = "$sessionId:${keyPair.public.encoded.toHexString(HexFormat.UpperCase)}"
-        onCodeReady(qrData)
 
         // Ensure connection
-        connectIfHasPeers(true)
+        if (!connectIfHasPeers(true, cancellationToken)) {
+            return
+        }
+
+        onCodeReady(qrData)
 
         // Subscribe to handshake topic
         connectionManager
@@ -151,10 +163,10 @@ class ListShareManager @Inject constructor(
                     Log.w(TAG, "MQTT UPDATE >> $remoteList")
                     if (onUpdateReceived != null) {
                         onUpdateReceived()
-                        disconnectIfNoPeers()
                     }
                 } else if (updateMessage.deleteListId != null) {
                     peerRepository.deletePeer(peer)
+                    disconnectIfNoPeers()
                 }
             }
     }
@@ -219,40 +231,52 @@ class ListShareManager @Inject constructor(
             )
     }
 
-    suspend fun handleLocalListModified(listId: String) {
-        peerRepository.getPeersForList(listId).forEach { peer ->
-            val list = listRepository.getListWithItems(peer.listId)
-            connectIfHasPeers(true)
+    fun handleLocalListModified(listId: String) {
+        if (updateHandlerJobs.containsKey(listId)) {
+            updateHandlerJobs[listId]!!.cancel()
+        }
 
-            val updateMessage = ListUpdateMessage(
-                deleteListId = null,
-                updateList = list,
-            )
+        updateHandlerJobs[listId] = CoroutineScope(Dispatchers.IO).async {
+            peerRepository.getPeersForList(listId).forEach { peer ->
+                val list = listRepository.getListWithItems(peer.listId)
+                connectIfHasPeers(true)
 
-            val secretKey = SecretKeySpec(peer.sharedAesKey!!.decodeHex().toByteArray(), "AES")
-            connectionManager
-                .createEncryptedTopic<ListUpdateMessage>(mqttGetTopicName(MqttMessageType.Update, peer.id), secretKey)
-                .setIsRetained(true)
-                .publish(updateMessage)
+                val updateMessage = ListUpdateMessage(
+                    deleteListId = null,
+                    updateList = list,
+                )
+
+                val secretKey = SecretKeySpec(peer.sharedAesKey!!.decodeHex().toByteArray(), "AES")
+                connectionManager
+                    .createEncryptedTopic<ListUpdateMessage>(mqttGetTopicName(MqttMessageType.Update, peer.id), secretKey)
+                    .setIsRetained(true)
+                    .publish(updateMessage)
+            }
         }
     }
 
-    suspend fun handleLocalListDeleted(listId: String) {
-        peerRepository.getPeersForList(listId).forEach { peer ->
-            connectIfHasPeers(true)
+    fun handleLocalListDeleted(listId: String) {
+        if (updateHandlerJobs.containsKey(listId)) {
+            updateHandlerJobs[listId]!!.cancel()
+        }
 
-            val updateMessage = ListUpdateMessage(
-                deleteListId = listId,
-                updateList = null,
-            )
+        updateHandlerJobs[listId] = CoroutineScope(Dispatchers.IO).async {
+            peerRepository.getPeersForList(listId).forEach { peer ->
+                connectIfHasPeers(true)
 
-            val secretKey = SecretKeySpec(peer.sharedAesKey!!.decodeHex().toByteArray(), "AES")
-            connectionManager
-                .createEncryptedTopic<ListUpdateMessage>(mqttGetTopicName(MqttMessageType.Update, peer.id), secretKey)
-                .setIsRetained(true)
-                .publish(updateMessage)
+                val updateMessage = ListUpdateMessage(
+                    deleteListId = listId,
+                    updateList = null,
+                )
 
-            disconnectIfNoPeers()
+                val secretKey = SecretKeySpec(peer.sharedAesKey!!.decodeHex().toByteArray(), "AES")
+                connectionManager
+                    .createEncryptedTopic<ListUpdateMessage>(mqttGetTopicName(MqttMessageType.Update, peer.id), secretKey)
+                    .setIsRetained(true)
+                    .publish(updateMessage)
+
+                disconnectIfNoPeers()
+            }
         }
     }
 

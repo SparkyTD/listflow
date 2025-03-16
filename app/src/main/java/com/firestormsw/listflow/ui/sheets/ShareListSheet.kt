@@ -65,6 +65,7 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorColor
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorFrameShape
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelShape
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.google.android.gms.tasks.CancellationTokenSource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,9 +82,13 @@ fun ShareListSheet(
     var qrCodeDrawable: Drawable? by remember { mutableStateOf(null) }
     val configuration = LocalConfiguration.current
     val context = LocalContext.current
+    val cancellationTokenSource = CancellationTokenSource()
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            onDismiss()
+            cancellationTokenSource.cancel()
+        },
         dragHandle = { SheetDragHandle() },
         sheetState = SheetState(
             skipPartiallyExpanded = true,
@@ -178,7 +183,10 @@ fun ShareListSheet(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StyledButton(
-                    onClick = onDismiss,
+                    onClick = {
+                        onDismiss()
+                        cancellationTokenSource.cancel()
+                    },
                     accentColor = PanelActive,
                     modifier = Modifier.width(configuration.screenWidthDp.dp.div(1f / 0.7f)),
                 ) {
@@ -190,7 +198,7 @@ fun ShareListSheet(
         }
 
         LaunchedEffect(list.id) {
-            viewModel.generateShareCode(list) { code ->
+            viewModel.generateShareCode(list, cancellationTokenSource.token) { code ->
                 val data = QrData.Text(code)
                 val options = createQrVectorOptions {
                     errorCorrectionLevel = QrErrorCorrectionLevel.Low
