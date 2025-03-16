@@ -18,6 +18,8 @@ Listflow does **not** include:
 - Full-screen popups begging you to pay
 - Any other useless bloat
 
+Tis app was created as a form of protest against all the other "Shopping list" apps on the Play store, that are all seemingly trying to find increasingly more creative ways of violating your fundamental human right to privacy. Too much of our software today is tracking our every move, and selling the data to advertisers without our knowledge or consent, and something as simple as a shopping list should NOT be one of those apps.
+
 ## Screenshots
 <p float="left">
 <img src="./screenshots/screenshot1.png" width="260" alt="Main app screen">
