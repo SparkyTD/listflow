@@ -14,4 +14,12 @@ data class ListItemModel(
     val isChecked: Boolean,
     val isHighlighted: Boolean,
     @kotlinx.serialization.Transient val createdAt: Date = Date.from(Instant.now()),
-)
+) {
+    fun textEquals(other: ListItemModel): Boolean {
+        return getNormalizedText() == other.getNormalizedText()
+    }
+
+    private fun getNormalizedText(): String {
+        return text.uppercase().replace("\\w".toRegex(), "")
+    }
+}

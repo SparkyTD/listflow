@@ -2,6 +2,7 @@ package com.firestormsw.listflow
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -147,8 +148,12 @@ class MainActivity : ComponentActivity() {
                     editList = state.editListTarget,
                     onDismiss = viewModel::closeEditListSheet,
                     onSave = { list ->
-                        viewModel.updateListNoItems(list)
                         viewModel.closeEditListSheet()
+                        if (viewModel.lists.value?.any { it.nameEquals(list) } == true) {
+                            Toast.makeText(applicationContext, getString(R.string.list_exists), Toast.LENGTH_LONG).show()
+                            return@EditListSheet
+                        }
+                        viewModel.updateListNoItems(list)
                     }
                 )
 
@@ -158,8 +163,12 @@ class MainActivity : ComponentActivity() {
                     onDismiss = viewModel::closeEditListItemSheet,
                     list = state.editListItemTargetList,
                     onSave = { item ->
-                        viewModel.updateListItem(item)
                         viewModel.closeEditListItemSheet()
+                        if (viewModel.lists.value?.any { it.items.any{i -> i.textEquals(item)} } == true) {
+                            Toast.makeText(applicationContext, getString(R.string.item_exists), Toast.LENGTH_LONG).show()
+                            return@EditItemSheet
+                        }
+                        viewModel.updateListItem(item)
                     }
                 )
 

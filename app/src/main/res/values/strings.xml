@@ -35,4 +35,6 @@
     <string name="snack_list_deleted">The list \'%1$s\' was deleted</string>
     <string name="snack_item_deleted">The item \'%1$s\' was deleted</string>
     <string name="default_list_name">Default</string>
+    <string name="item_exists">An item with the same name already exists.</string>
+    <string name="list_exists">A list with the same name already exists.</string>
 </resources>
