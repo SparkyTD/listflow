@@ -19,7 +19,7 @@
     <string name="save_list">Save list</string>
     <string name="scan_qr_desc">Scan the QR code of a shared list</string>
     <string name="qr_scan_camera_permission_error">The camera permission was denied</string>
-    <string name="initializing_camera">Initializing camera...</string>
+    <string name="initializing_camera">Initializing camera…</string>
     <string name="close">Close</string>
     <string name="scan_qr_instruction_0">"Long-press the list to share on the second device, and select the "</string>
     <string name="scan_qr_instruction_1">" option"</string>

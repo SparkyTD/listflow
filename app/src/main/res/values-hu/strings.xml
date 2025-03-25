@@ -17,7 +17,7 @@
     <string name="item_name">Tétel neve</string>
     <string name="create_list">Lista létrehozása</string>
     <string name="save_list">Lista mentése</string>
-    <string name="initializing_camera">Kamera előkészítése...</string>
+    <string name="initializing_camera">Kamera előkészítése…</string>
     <string name="close">Bezárás</string>
     <string name="highlight">Kiemelés</string>
     <string name="undo">Mégsem</string>
