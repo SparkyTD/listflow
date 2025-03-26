@@ -1,5 +1,6 @@
 package com.firestormsw.listflow.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.width
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.firestormsw.listflow.R
+import com.firestormsw.listflow.TAG
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.icons.Add
@@ -111,7 +113,7 @@ fun ListSelector(
     DropdownMenu(
         expanded = addDropdownExpanded,
         onDismissRequest = { addDropdownExpanded = false },
-        offset = menuOffset,
+        offset = menuOffset.copy(x = menuOffset.x.div(2)),
         containerColor = PanelInactive,
     ) {
         DropdownMenuItem(
