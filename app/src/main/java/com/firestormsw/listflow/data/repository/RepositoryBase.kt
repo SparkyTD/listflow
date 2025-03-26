@@ -31,6 +31,8 @@ open class RepositoryBase {
         isHighlighted = isHighlighted,
         createdAt = createdAt,
         listId = listId,
+        frequencyScore = frequencyScore,
+        lastFrequencyUpdate = lastFrequencyUpdate,
     )
 
     fun ListItemEntity.toModel(): ListItemModel = ListItemModel(
@@ -42,6 +44,8 @@ open class RepositoryBase {
         isHighlighted = isHighlighted,
         createdAt = createdAt,
         listId = listId,
+        frequencyScore = frequencyScore,
+        lastFrequencyUpdate = lastFrequencyUpdate,
     )
 
     fun PeerModel.toEntity(): PeerEntity = PeerEntity(

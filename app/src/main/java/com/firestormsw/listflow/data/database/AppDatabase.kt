@@ -14,10 +14,11 @@ import com.firestormsw.listflow.data.entity.PeerEntity
 @Database(
     entities = [ListEntity::class, ListItemEntity::class, PeerEntity::class],
     exportSchema = true,
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4),
     ]
 )
 @TypeConverters(com.firestormsw.listflow.data.database.TypeConverters::class)

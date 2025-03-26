@@ -24,6 +24,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ulid.ULID
+import java.time.Instant
+import java.util.Date
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -114,7 +117,16 @@ class ListflowViewModel @Inject constructor(
             if (checked) {
                 _pendingCheckedItems.value += item
             }
+
+            val now = Date.from(Instant.now())
+            val lastFrequencyUpdate = item.lastFrequencyUpdate ?: now
+            val diffInHours = TimeUnit.MILLISECONDS.toHours(now.time - lastFrequencyUpdate.time)
+            val shouldUpdateFrequency = checked && (diffInHours >= 24 || item.lastFrequencyUpdate == null)
+            val nextFrequencyUpdate = if (shouldUpdateFrequency) now else item.lastFrequencyUpdate
+            val nextFrequencyScore = if (shouldUpdateFrequency) item.frequencyScore + 1 else item.frequencyScore
+
             listItemRepository.upsertListItem(item.copy(isChecked = checked))
+
             shareManager.handleLocalListModified(item.listId)
 
             if (checked) {
@@ -122,7 +134,14 @@ class ListflowViewModel @Inject constructor(
                 pendingMoveJob = viewModelScope.launch(Dispatchers.IO) {
                     delay(800)
                     for (pendingItem in _pendingCheckedItems.value) {
-                        listItemRepository.upsertListItem(pendingItem.copy(isHighlighted = false, isChecked = true))
+                        listItemRepository.upsertListItem(
+                            pendingItem.copy(
+                                isHighlighted = false,
+                                isChecked = true,
+                                lastFrequencyUpdate = nextFrequencyUpdate,
+                                frequencyScore = nextFrequencyScore,
+                            )
+                        )
                     }
                     _pendingCheckedItems.value = emptySet()
                 }

@@ -70,7 +70,12 @@ fun TodoList(
     )
 
     val itemList = list.items.partition { !it.isChecked || pendingCheckedItems.any { pendingItem -> pendingItem.id == it.id } }
-    val uncheckedItemList = itemList.first.sortedBy { !it.isHighlighted }
+    val uncheckedItemList = itemList.first.sortedWith(
+        compareBy(
+            { !it.isHighlighted },
+            { -it.frequencyScore }
+        )
+    )
 
     var isCompletedExpanded by remember { mutableStateOf(!list.isCheckedExpanded) }
     val expandArrowRotation: Float by animateFloatAsState(
@@ -164,12 +169,13 @@ fun TodoList(
                 ) {
                     Text(
                         text = buildAnnotatedString {
-                            withLink(LinkAnnotation.Clickable(
-                                tag = "uncheck-all",
-                                linkInteractionListener = {
-                                    onPromptUncheckAll(list)
-                                }
-                            )) {
+                            withLink(
+                                LinkAnnotation.Clickable(
+                                    tag = "uncheck-all",
+                                    linkInteractionListener = {
+                                        onPromptUncheckAll(list)
+                                    }
+                                )) {
                                 append(stringResource(R.string.uncheck_all_items))
                             }
                         },

@@ -9,7 +9,8 @@ class ListItemRepository @Inject constructor(
 ) : RepositoryBase() {
 
     fun upsertListItem(item: ListItemModel) {
-        listItemDao.upsertListItem(item.toEntity())
+        val entity = item.toEntity()
+        listItemDao.upsertListItem(entity)
     }
 
     fun deleteListItem(item: ListItemModel) {

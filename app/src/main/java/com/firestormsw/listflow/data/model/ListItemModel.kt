@@ -14,6 +14,8 @@ data class ListItemModel(
     val isChecked: Boolean,
     val isHighlighted: Boolean,
     @kotlinx.serialization.Transient val createdAt: Date = Date.from(Instant.now()),
+    @kotlinx.serialization.Transient val frequencyScore: Int = 0,
+    @kotlinx.serialization.Transient val lastFrequencyUpdate: Date? = null,
 ) {
     fun textEquals(other: ListItemModel): Boolean {
         return getNormalizedText() == other.getNormalizedText()

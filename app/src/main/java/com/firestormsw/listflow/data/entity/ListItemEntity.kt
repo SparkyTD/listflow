@@ -1,5 +1,6 @@
 package com.firestormsw.listflow.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -27,4 +28,6 @@ data class ListItemEntity(
     val isChecked: Boolean,
     val isHighlighted: Boolean,
     val createdAt: Date,
+    @ColumnInfo(defaultValue = "0") val frequencyScore: Int,
+    @ColumnInfo(defaultValue = "null") val lastFrequencyUpdate: Date?,
 )
