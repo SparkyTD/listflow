@@ -1,6 +1,5 @@
 package com.firestormsw.listflow.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.width
@@ -24,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.firestormsw.listflow.R
-import com.firestormsw.listflow.TAG
 import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.icons.Add
@@ -33,6 +31,7 @@ import com.firestormsw.listflow.ui.icons.Edit
 import com.firestormsw.listflow.ui.icons.QrCode
 import com.firestormsw.listflow.ui.icons.Share
 import com.firestormsw.listflow.ui.theme.PanelInactive
+import com.firestormsw.listflow.ui.theme.TextDanger
 import com.firestormsw.listflow.ui.theme.TextPrimary
 import com.firestormsw.listflow.ui.theme.Typography
 
@@ -165,8 +164,8 @@ fun ListSelector(
             }
         )
         DropdownMenuItem(
-            text = { Text(stringResource(R.string.delete_list), style = Typography.bodyLarge) },
-            leadingIcon = { Icon(Delete, contentDescription = null) },
+            text = { Text(stringResource(R.string.delete_list), style = Typography.bodyLarge, color = TextDanger) },
+            leadingIcon = { Icon(Delete, contentDescription = null, tint = TextDanger) },
             onClick = {
                 editDropdownExpanded = false
                 if (targetList != null) {

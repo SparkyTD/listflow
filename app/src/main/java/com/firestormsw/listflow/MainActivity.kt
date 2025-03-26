@@ -26,12 +26,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.viewmodel.ListflowViewModel
 import com.firestormsw.listflow.ui.components.ListSelector
 import com.firestormsw.listflow.ui.components.TodoList
+import com.firestormsw.listflow.ui.dialogs.DeleteListDialog
 import com.firestormsw.listflow.ui.icons.Add
 import com.firestormsw.listflow.ui.sheets.EditItemSheet
 import com.firestormsw.listflow.ui.sheets.EditListSheet
@@ -55,6 +58,7 @@ class MainActivity : ComponentActivity() {
             ListflowTheme {
                 val state by viewModel.uiState.collectAsState()
                 val snackbarHostState = remember { SnackbarHostState() }
+                val openDeleteListDialog = remember { mutableStateOf<ListModel?>(null) }
 
                 LaunchedEffect(state.snackbarMessage) {
                     if (state.snackbarMessage != null) {
@@ -86,7 +90,9 @@ class MainActivity : ComponentActivity() {
                                 onListSelected = viewModel::setSelectedList,
                                 onPromptCreateList = { viewModel.openEditListSheet(null) },
                                 onPromptEditList = viewModel::openEditListSheet,
-                                onPromptDeleteList = viewModel::deleteList,
+                                onPromptDeleteList = { list ->
+                                    openDeleteListDialog.value = list
+                                },
                                 onPromptShareList = viewModel::openShareListSheet,
                                 onPromptScanCode = viewModel::openScanShareCodeSheet,
                             )
@@ -163,7 +169,7 @@ class MainActivity : ComponentActivity() {
                     onDismiss = viewModel::closeEditListItemSheet,
                     list = state.editListItemTargetList,
                     onSave = { item ->
-                        if (viewModel.lists.value?.any { it.items.any{i -> i.textEquals(item)} } == true) {
+                        if (viewModel.lists.value?.any { it.items.any { i -> i.textEquals(item) } } == true) {
                             Toast.makeText(applicationContext, getString(R.string.item_exists), Toast.LENGTH_LONG).show()
                             return@EditItemSheet
                         }
@@ -184,6 +190,21 @@ class MainActivity : ComponentActivity() {
                     onDismiss = viewModel::closeScanShareCodeSheet,
                     onCodeScanned = viewModel::processScannedShareCode
                 )
+
+                when {
+                    openDeleteListDialog.value != null -> {
+                        DeleteListDialog(
+                            listModel = openDeleteListDialog.value!!,
+                            onDismiss = {
+                                openDeleteListDialog.value = null
+                            },
+                            onConfirm = {
+                                viewModel.deleteList(openDeleteListDialog.value!!)
+                                openDeleteListDialog.value = null
+                            }
+                        )
+                    }
+                }
             }
         }
     }

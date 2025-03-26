@@ -38,4 +38,7 @@
     <string name="share_qr_instruction_1">" gombot a másik eszközön, és válaszd a "</string>
     <string name="item_exists">Már létezik egy tétel ezzel a névvel</string>
     <string name="list_exists">Már létezik egy lista ezzel a névvel</string>
+    <string name="delete_list_confirm_title">%1$s törlése</string>
+    <string name="delete_list_confirm_text">Biztosan törölni szeretnéd ezt a listát és a teljes tartalmát?</string>
+    <string name="cancel">Mégsem</string>
 </resources>

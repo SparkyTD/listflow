@@ -51,6 +51,7 @@ import com.firestormsw.listflow.ui.theme.BorderThickness
 import com.firestormsw.listflow.ui.theme.CornerRadius
 import com.firestormsw.listflow.ui.theme.PanelActive
 import com.firestormsw.listflow.ui.theme.PanelInactive
+import com.firestormsw.listflow.ui.theme.TextDanger
 import com.firestormsw.listflow.ui.theme.TextPrimary
 import com.firestormsw.listflow.ui.theme.TextSecondary
 import com.firestormsw.listflow.ui.theme.Typography
@@ -134,7 +135,7 @@ fun TodoListItem(
                     if (item.quantity != null && item.quantity != 0f || !item.unit.isNullOrEmpty()) {
                         Spacer(Modifier.width(8.dp))
                         Surface(
-                            shape = RoundedCornerShape(8.dp),
+                            shape = RoundedCornerShape(CornerRadius.Small),
                             color = if (item.isChecked) PanelActive else TextSecondary
                         ) {
                             Text(
@@ -206,8 +207,8 @@ fun TodoListItem(
                 )
             }
             DropdownMenuItem(
-                text = { Text(stringResource(R.string.delete_item), style = Typography.bodyLarge) },
-                leadingIcon = { Icon(Delete, contentDescription = null) },
+                text = { Text(stringResource(R.string.delete_item), style = Typography.bodyLarge, color = TextDanger) },
+                leadingIcon = { Icon(Delete, contentDescription = null, tint = TextDanger) },
                 onClick = {
                     editDropdownExpanded = false
                     onPromptDeleteItem(item)

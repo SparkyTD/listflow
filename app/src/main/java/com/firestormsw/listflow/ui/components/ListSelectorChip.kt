@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.SelectableChipColors
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.firestormsw.listflow.ui.theme.Accent
+import com.firestormsw.listflow.ui.theme.CornerRadius
 import com.firestormsw.listflow.ui.theme.PanelActive
 import com.firestormsw.listflow.ui.theme.TextPrimary
 import com.firestormsw.listflow.ui.theme.Typography
@@ -54,6 +56,7 @@ fun ListSelectorChip(
             onClick = {},
             colors = chipColors,
             border = null,
+            shape = RoundedCornerShape(CornerRadius.Small)
         )
 
         Box(
