@@ -14,6 +14,7 @@ import com.firestormsw.listflow.ui.theme.CornerRadius
 import com.firestormsw.listflow.ui.theme.PanelActive
 import com.firestormsw.listflow.ui.theme.TextDanger
 import com.firestormsw.listflow.ui.theme.TextPrimary
+import com.firestormsw.listflow.ui.theme.Typography
 
 @Composable
 fun DeleteListDialog(
@@ -23,19 +24,19 @@ fun DeleteListDialog(
 ) {
     AlertDialog(
         icon = { Icon(Delete, contentDescription = null, tint = TextPrimary) },
-        title = { Text(text = stringResource(R.string.delete_list_confirm_title, listModel.name), color = TextPrimary) },
-        text = { Text(text = stringResource(R.string.delete_list_confirm_text), color = TextPrimary) },
+        title = { Text(text = stringResource(R.string.delete_list_confirm_title, listModel.name), style = Typography.bodyLarge, color = TextPrimary) },
+        text = { Text(text = stringResource(R.string.delete_list_confirm_text), style = Typography.bodyLarge, color = TextPrimary) },
         onDismissRequest = { onDismiss() },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.delete_list), color = TextDanger)
+                Text(stringResource(R.string.delete_list), style = Typography.bodyLarge, color = TextDanger)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text(stringResource(R.string.cancel), color = TextPrimary)
+                Text(stringResource(R.string.cancel), style = Typography.bodyLarge, color = TextPrimary)
             }
         },
         containerColor = PanelActive,
