@@ -14,6 +14,6 @@ data class ListModel(
     }
 
     private fun getNormalizedName(): String {
-        return name.uppercase().replace("\\w".toRegex(), "")
+        return name.uppercase().replace("\\s".toRegex(), "")
     }
 }

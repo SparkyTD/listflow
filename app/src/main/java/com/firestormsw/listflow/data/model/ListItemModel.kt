@@ -20,6 +20,6 @@ data class ListItemModel(
     }
 
     private fun getNormalizedText(): String {
-        return text.uppercase().replace("\\w".toRegex(), "")
+        return text.uppercase().replace("\\s".toRegex(), "")
     }
 }
