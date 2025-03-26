@@ -148,11 +148,11 @@ class MainActivity : ComponentActivity() {
                     editList = state.editListTarget,
                     onDismiss = viewModel::closeEditListSheet,
                     onSave = { list ->
-                        viewModel.closeEditListSheet()
                         if (viewModel.lists.value?.any { it.nameEquals(list) } == true) {
                             Toast.makeText(applicationContext, getString(R.string.list_exists), Toast.LENGTH_LONG).show()
                             return@EditListSheet
                         }
+                        viewModel.closeEditListSheet()
                         viewModel.updateListNoItems(list)
                     }
                 )
@@ -163,11 +163,11 @@ class MainActivity : ComponentActivity() {
                     onDismiss = viewModel::closeEditListItemSheet,
                     list = state.editListItemTargetList,
                     onSave = { item ->
-                        viewModel.closeEditListItemSheet()
                         if (viewModel.lists.value?.any { it.items.any{i -> i.textEquals(item)} } == true) {
                             Toast.makeText(applicationContext, getString(R.string.item_exists), Toast.LENGTH_LONG).show()
                             return@EditItemSheet
                         }
+                        viewModel.closeEditListItemSheet()
                         viewModel.updateListItem(item)
                     }
                 )
