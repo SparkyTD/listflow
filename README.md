@@ -17,6 +17,7 @@ Listflow does **not** include:
 - Analytics or any form of data collection
 - Full-screen popups begging you to pay
 - Any other useless bloat
+- Backdoor to the encryption. Any demands to add it from tyrannical governments will be ignored. It's simply never happening, peiod.
 
 This app was created as a form of protest against all the other "Shopping list" apps on the Play store, that are all seemingly trying to find increasingly more creative ways of violating your fundamental human right to privacy. Too much of our software today is tracking our every move, and selling the data to advertisers without our knowledge or consent, and something as simple as a shopping list should NOT be one of those apps.
 
