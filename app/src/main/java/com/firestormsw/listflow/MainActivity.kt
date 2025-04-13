@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
                     onDismiss = viewModel::closeEditListItemSheet,
                     list = state.editListItemTargetList,
                     onSave = { item ->
-                        if (viewModel.lists.value?.any { it.items.any { i -> i.textEquals(item) } } == true) {
+                        if (viewModel.lists.value?.any {it.id == item.listId && it.items.any { i -> i.textEquals(item) && i.id != item.id } } == true) {
                             Toast.makeText(applicationContext, getString(R.string.item_exists), Toast.LENGTH_LONG).show()
                             return@EditItemSheet
                         }
