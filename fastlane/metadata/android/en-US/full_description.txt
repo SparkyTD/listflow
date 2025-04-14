@@ -1,0 +1,31 @@
+<p><big><strong>Listflow</strong></big> - A simple, minimalistic and privacy-respecting shopping list / todo list app for Android. No ads, no telemetry, no paid subscriptions.</p>
+
+<p><strong>What it does</strong><br>
+Listflow is a straightforward list management app that focuses on being simple and effective:</p>
+<ul>
+<li>Create and manage multiple named lists</li>
+<li>Add, edit, check/uncheck, highlight items</li>
+<li>Optionally specify custom quantities for items</li>
+<li>Simple and intuitive interface</li>
+<li>Share lists with a second device, synchronize between devices (end-to-end encrypted)</li>
+</ul>
+
+<p><strong>What it doesn't do</strong><br>
+Listflow does <strong>not</strong> include:</p>
+<ul>
+<li>Ads</li>
+<li>Account creation requirements</li>
+<li>"Premium" features or any kind of subscription</li>
+<li>Analytics or any form of data collection</li>
+<li>Full-screen popups begging you to pay</li>
+<li>Any other useless bloat</li>
+<li>Backdoor to the encryption.</li>
+</ul>
+
+<p>This app was created as a form of protest against all the other "Shopping list" apps on the Play store, that are all seemingly trying to find increasingly more creative ways of violating your fundamental human right to privacy. Too much of our software today is tracking our every move, and selling the data to advertisers without our knowledge or consent, and something as simple as a shopping list should NOT be one of those apps.</p>
+
+<p><strong>List sharing and synchronizing</strong><br>
+This feature is implemented by using MQTT to transmit list updates between two devices. All communications besides the initial handshake are fully end-to-end encrypted using ECDH Key Derivation and AES encryption. Currently the app uses the <tt>mqtt.eclipseprojects.io</tt> public MQTT broker, but you can always self-host your own by forking the repository and changing the broker URL.</p>
+
+<p><strong>Open Source</strong><br>
+Listflow is completely open source under the GPL-3.0 License. You can view the source code, contribute, or fork the project to create your own version.</p>

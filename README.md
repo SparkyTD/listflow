@@ -23,9 +23,9 @@ This app was created as a form of protest against all the other "Shopping list" 
 
 ## Screenshots
 <p float="left">
-<img src="./screenshots/screenshot1.png" width="260" alt="Main app screen">
-<img src="./screenshots/screenshot2.png" width="260" alt="Edit item menu">
-<img src="./screenshots/screenshot3.png" width="260" alt="Sharing functionality">
+<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="260" alt="Main app screen">
+<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="260" alt="Edit item menu">
+<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="260" alt="Sharing functionality">
 </p>
 
 ## Installation
