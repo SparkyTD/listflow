@@ -1,1 +1,1 @@
-A simple, minimalistic shopping list list app
+A simple, minimalistic shopping list app
