@@ -65,7 +65,7 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorColor
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorFrameShape
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelShape
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
-import com.google.android.gms.tasks.CancellationTokenSource
+import com.firestormsw.listflow.utils.CancellationTokenSource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -198,7 +198,7 @@ fun ShareListSheet(
         }
 
         LaunchedEffect(list.id) {
-            viewModel.generateShareCode(list, cancellationTokenSource.token) { code ->
+            viewModel.generateShareCode(list, cancellationTokenSource.getToken()) { code ->
                 val data = QrData.Text(code)
                 val options = createQrVectorOptions {
                     errorCorrectionLevel = QrErrorCorrectionLevel.Low

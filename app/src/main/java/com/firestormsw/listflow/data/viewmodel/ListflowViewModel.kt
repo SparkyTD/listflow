@@ -12,7 +12,7 @@ import com.firestormsw.listflow.data.model.ListModel
 import com.firestormsw.listflow.data.repository.ListItemRepository
 import com.firestormsw.listflow.data.repository.ListRepository
 import com.firestormsw.listflow.data.repository.PeerRepository
-import com.google.android.gms.tasks.CancellationToken
+import com.firestormsw.listflow.utils.CancellationToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

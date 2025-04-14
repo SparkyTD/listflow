@@ -5,7 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import com.firestormsw.listflow.TAG
-import com.google.android.gms.tasks.CancellationToken
+import com.firestormsw.listflow.utils.CancellationToken
 import kotlinx.coroutines.delay
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence
@@ -36,7 +36,7 @@ class MqttConnectionManager(
         val persistence: MqttClientPersistence = MemoryPersistence()
 
         while (true) {
-            if (cancellationToken?.isCancellationRequested == true) {
+            if (cancellationToken?.isCancellationRequested() == true) {
                 return false
             }
 
